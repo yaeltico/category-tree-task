@@ -17,7 +17,7 @@ const CategoryItem = ({
   saveCategory,
 }) => {
   const hasSubCategories = subCategories && subCategories.length > 0;
-  const indentFactor = ((level - 1) * 10) + 5;
+  const indentFactor = (level - 1) * 10 + 5;
   const [expendSubTree, setExpendSubTree] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
 
@@ -50,7 +50,7 @@ const CategoryItem = ({
   const finishCurrentEditHandler = () => {
     // console.log("finish edit", category, parentId);
     setDisabled(true);
-    if(category){
+    if (category) {
       validateNameNotEmpty(category);
       saveCategory(category, id, parentId);
     }
@@ -62,7 +62,7 @@ const CategoryItem = ({
       event.target.blur();
       setDisabled(true);
     }
-  }
+  };
   const onEditHandler = (e) => {
     setDisabled(false);
   };
@@ -71,7 +71,6 @@ const CategoryItem = ({
     setExpendSubTree(true);
     setOpenMenu(false);
     addCategoryHandler(id, level);
-    
   };
 
   const inputClass = disabled ? classes.categoryDisabled : classes.categoryEdit;
@@ -91,7 +90,8 @@ const CategoryItem = ({
         />
         <div className={classes.category}>
           <input
-            className={`${inputClass} ${!valid && classes.invalidName}`}    
+            autoFocus
+            className={`${inputClass} ${!valid && classes.invalidName}`}
             ref={categoryInputRef}
             type="text"
             value={category}
