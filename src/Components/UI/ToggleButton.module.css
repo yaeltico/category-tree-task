@@ -1,0 +1,23 @@
+.button {
+  padding: 0;
+  width: 50px;
+  border: 0;
+  background: none;
+  color: #333;
+  cursor: pointer;
+  outline: 0;
+  font-size: 1.2em;
+  display: inline-block;
+}
+
+.button:focus {
+  outline: none;
+}
+
+.button:disabled,
+.button:focus:disabled,
+.button:hover:disabled,
+.button:active:disabled {
+  color: #918d8d;
+  cursor: not-allowed;
+}

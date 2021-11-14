@@ -1,0 +1,50 @@
+/* .tree {
+  display: flex;
+  align-items: center;
+  margin: 0 1em;
+}
+*/
+.title {
+  margin: 0.5em;
+} 
+
+.saveContainer {
+  display: flow-root;
+  margin-right: 0.8em;
+}
+
+.save {
+  float: right;
+}
+
+.categoris {
+  max-width: 60rem;
+  width: 75%;
+  margin: 2rem auto;
+  font-size: 1rem;
+}
+
+.categoris ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.newItemButton {
+  font: inherit;
+  border: none;
+  background: none;
+  color: rgb(77, 75, 75);
+  padding: 0.3rem 1.2rem;
+  cursor: pointer;
+  font-size: 1rem;
+  border-radius: 15px;
+  margin: 0.5em 0;
+  display: flex;
+  align-items: center;
+}
+
+.newLabel {
+  margin-left: 1em;
+  font-style: italic;
+}

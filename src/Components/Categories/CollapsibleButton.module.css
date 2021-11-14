@@ -1,0 +1,5 @@
+.arrow {
+  display: inline-block;
+  transition: 0.3s;
+  font-weight: bold;
+}
