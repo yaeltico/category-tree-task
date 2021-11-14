@@ -1,6 +1,6 @@
 .button {
-  border: 1px solid #2f2f2f;
-  background: #3a3a3a;
+  border: 1px solid #820841;
+  background: #b30c5a;
   color: whitesmoke;
   padding: 0.22rem 0.7rem;
   cursor: pointer;
@@ -9,8 +9,10 @@
 
 .button:hover,
 .button:active {
-  background: #494949;
-  border-color: #3e3d3d;
+  /* background: #494949;
+  border-color: #3e3d3d; */
+  border-color: #940a4b;
+  background: #d3176f;
   box-shadow: 0 0 15px #ccc;
 }
 

@@ -8,7 +8,7 @@
 
 .category {
   width: 100%;
-  /* margin: 0.4em 0; */
+  margin: 0.15em 0;
 }
 
 .categoryEdit {
@@ -18,7 +18,7 @@
   color: rgb(43, 43, 43);
   font-size: 1.05rem;
   width: 100%; /*remove after*/
-  /* padding: 0.4em; */
+  padding: 0.4em;
 }
 
 .categoryEdit:focus {
@@ -37,5 +37,5 @@
   color: rgb(43, 43, 43);
   font-size: 1.05rem;
   width: 95%; /*remove after*/
-  /* padding: 0.4em; */
+  padding: 0.4em;
 }

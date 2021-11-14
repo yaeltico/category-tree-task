@@ -37,6 +37,7 @@ const CategoryItem = ({
 
   const toggleMenuHandler = () => {
     setOpenMenu((prevState) => !prevState);
+    console.log("toggle menu");
   };
 
   const toggleCategoryHandler = () => {
@@ -70,6 +71,7 @@ const CategoryItem = ({
   const newCategoryHandler = () => {
     setExpendSubTree(true);
     setOpenMenu(false);
+    console.log("close menu");
     addCategoryHandler(id, level);
   };
 

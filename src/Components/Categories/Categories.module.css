@@ -1,9 +1,3 @@
-/* .tree {
-  display: flex;
-  align-items: center;
-  margin: 0 1em;
-}
-*/
 .title {
   margin: 0.5em;
 } 
@@ -15,6 +9,10 @@
 
 .save {
   float: right;
+}
+
+.savedLabel {
+  margin-right: 0.5em;
 }
 
 .categoris {

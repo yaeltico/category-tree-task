@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { List, AutoSizer } from "react-virtualized";
+// import { List, AutoSizer } from "react-virtualized";
 import { AiOutlinePlus } from "react-icons/ai";
 import { v4 as uuidv4 } from "uuid";
 import CategoryItem from "./CategoryItem/CategoryItem";
@@ -34,18 +34,29 @@ const setNodeName = (id, name, list) => {
 /**
  * Constants
  */
-const listHeight = 600;
-const rowHeight = 30;
-const rowWidth = 600;
+// const listHeight = 600;
+// const rowHeight = 30;
+// const rowWidth = 600;
 
 /**
  *      Component representing a tree of categories
  * */
 const CategoriesTree = ({ categories, setCategories, onSaveAll }) => {
+  const [showSaved, setShowSaved] = useState(false);
+
   useEffect(() => {
     // console.log("tree",tree);
     setCategories(categories);
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSaved(false);
+    }, 3000);
+    console.log("timeout");
+
+    return () => clearTimeout(timer);
+  }, [showSaved]);
 
   const deleteHandler = (id, parentId) => {
     // in case category in root
@@ -100,58 +111,62 @@ const CategoriesTree = ({ categories, setCategories, onSaveAll }) => {
     setCategories(categoryItems);
   };
 
-  const rowRenderer = ({
-    index, // Index of row
-    key, // Unique key within array of rendered rows
-    style, // Style object to be applied to row (to position it);
-    // This must be passed through to the rendered row element.
-  }) => {
-    const item = categories[index];
-    return (
-      <div key={key} style={style} className="row">
-        <CategoryItem
-          key={item.id}
-          id={item.id}
-          parentId={!item.parentId ? null : item.parentId}
-          name={item.name}
-          level={item.level}
-          rootIndex={item.rootIndex}
-          subCategories={!item.subCategories ? [] : item.subCategories}
-          createTreeNodes={generateCategoryTree}
-          addCategoryHandler={addCategoryHandler}
-          deleteHandler={deleteHandler}
-          saveCategory={saveCategory}
-        ></CategoryItem>
-      </div>
-    );
-  };
+  // const rowRenderer = ({
+  //   index, // Index of row
+  //   key, // Unique key within array of rendered rows
+  //   style, // Style object to be applied to row (to position it);
+  //   // This must be passed through to the rendered row element.
+  // }) => {
+  //   const item = categories[index];
+  //   return (
+  //     <div key={key} style={style} className="row">
+  //       <CategoryItem
+  //         key={item.id}
+  //         id={item.id}
+  //         parentId={!item.parentId ? null : item.parentId}
+  //         name={item.name}
+  //         level={item.level}
+  //         rootIndex={item.rootIndex}
+  //         subCategories={!item.subCategories ? [] : item.subCategories}
+  //         createTreeNodes={generateCategoryTree}
+  //         addCategoryHandler={addCategoryHandler}
+  //         deleteHandler={deleteHandler}
+  //         saveCategory={saveCategory}
+  //       ></CategoryItem>
+  //     </div>
+  //   );
+  // };
 
   const generateCategoryTree = (items) => {
-    return (
-      <List
-        width={rowWidth}
-        height={listHeight}
-        rowHeight={rowHeight}
-        rowRenderer={rowRenderer}
-        rowCount={categories.length}
-      />
-    );
-    // console.log(items);
-    // return items.map((item) => (
-    //   <CategoryItem
-    //     key={item.id}
-    //     id={item.id}
-    //     parentId={!item.parentId ? null : item.parentId}
-    //     name={item.name}
-    //     level={item.level}
-    //     rootIndex={item.rootIndex}
-    //     subCategories={!item.subCategories ? [] : item.subCategories}
-    //     createTreeNodes={generateCategoryTree}
-    //     addCategoryHandler={addCategoryHandler}
-    //     deleteHandler={deleteHandler}
-    //     saveCategory={saveCategory}
-    //   ></CategoryItem>
-    // ));
+    // return (
+    //   <List
+    //     width={rowWidth}
+    //     height={listHeight}
+    //     rowHeight={rowHeight}
+    //     rowRenderer={rowRenderer}
+    //     rowCount={categories.length}
+    //   />
+    // );
+    return items.map((item) => (
+      <CategoryItem
+        key={item.id}
+        id={item.id}
+        parentId={!item.parentId ? null : item.parentId}
+        name={item.name}
+        level={item.level}
+        rootIndex={item.rootIndex}
+        subCategories={!item.subCategories ? [] : item.subCategories}
+        createTreeNodes={generateCategoryTree}
+        addCategoryHandler={addCategoryHandler}
+        deleteHandler={deleteHandler}
+        saveCategory={saveCategory}
+      ></CategoryItem>
+    ));
+  };
+
+  const saveHanlder = () => {
+    setShowSaved(true);
+    onSaveAll(categories);
   };
 
   return (
@@ -159,12 +174,10 @@ const CategoriesTree = ({ categories, setCategories, onSaveAll }) => {
       <Card>
         <h3 className={classes.title}>Animals</h3>
         <div className={classes.saveContainer}>
-          <Button
-            className={classes.save}
-            onClick={() => onSaveAll(categories)}
-          >
-            Save
-          </Button>
+          <div className={classes.save}>
+            {showSaved && <span className={classes.savedLabel}>✓ Saved</span> }
+            <Button onClick={saveHanlder}>Save</Button>
+          </div>
         </div>
         <ul>
           {categories &&

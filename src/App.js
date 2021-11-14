@@ -1,80 +1,8 @@
 import React, { useEffect, Fragment, useState, useCallback } from "react";
-import { v4 as uuidv4 } from "uuid";
 import CategoriesTree from "./Components/Categories/CategoriesTree";
-
+import { bigList, demoCategories } from "./Components/Utils/defaultDb";
 import classes from "./App.module.css";
 
-const rowCount = 1000;
-const bigList = Array(rowCount).fill().map(() => {
-    return {
-      id: uuidv4(),
-      parentId: null,
-      name: "Dogs",
-      level: 1,
-      subCategories: [],
-    };
-  });
-const demoCategories = [
-  {
-    id: "0",
-    parentId: null,
-    name: "Dogs",
-    level: 0,
-    subCategories: [
-      {
-        id: "00",
-        parentId: "0",
-        name: "Golden Retriever",
-        level: 1,
-        subCategories: [],
-      },
-      {
-        id: "01",
-        parentId: "0",
-        name: "Lavrador Retriever",
-        level: 1,
-        subCategories: [],
-      },
-    ],
-  },
-  {
-    id: "1",
-    parentId: null,
-    name: "Hourses",
-    level: 0,
-    subCategories: [],
-  },
-  {
-    id: "2",
-    parentId: null,
-    name: "Cats",
-    level: 0,
-    subCategories: [
-      {
-        id: "20",
-        parentId: "2",
-        name: "Home Cats",
-        level: 1,
-        subCategories: [
-          {
-            id: "200",
-            parentId: "20",
-            name: "Abyssinian Cat",
-            level: 2,
-            subCategories: [],
-          },
-          {
-            id: "201",
-            parentId: "20",
-            name: "Bengal Cat",
-            level: 2,
-            subCategories: [],
-          },
-        ],
-      },
-    ],
-  },
-];
 
 const saveAllCategoriesHandler = async (categories) => {
   // save categories to firbase
@@ -89,11 +17,11 @@ const saveAllCategoriesHandler = async (categories) => {
     }
   );
   const data = await response.json();
-  console.log(data);
+  // console.log(data);
 };
 
 function App() {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState(demoCategories);
   const [isLodaing, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -127,7 +55,7 @@ function App() {
           subCategories: category.subCategories ? category.subCategories : [],
         }));
       }
-      setCategories(loadedTree);
+      // setCategories(loadedTree);
     } catch (error) {
       setError(error.message);
     }
@@ -142,7 +70,7 @@ function App() {
 
   let mainContent = categories && (
     <CategoriesTree
-      categories={bigList}
+      categories={categories}
       setCategories={setCategories}
       onSaveAll={saveAllCategoriesHandler}
     />
