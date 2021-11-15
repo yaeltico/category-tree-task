@@ -3,7 +3,6 @@ import CategoriesTree from "./components/Categories/CategoriesTree";
 import { bigList, demoCategories } from "./components/utils/defaultDb";
 import classes from "./App.module.css";
 
-
 const saveAllCategoriesHandler = async (categories) => {
   // save categories to firbase
   const response = await fetch(
@@ -30,7 +29,7 @@ function App() {
     // retrieve categories from firbase
     try {
       const response = await fetch(
-        "https://category-db-5f496-default-rtdb.europe-west1.firebasedatabase.app/categories.json?orderBy=\"$key\"&limitToLast=1"
+        'https://category-db-5f496-default-rtdb.europe-west1.firebasedatabase.app/categories.json?orderBy="$key"&limitToLast=1'
       );
       if (!response.ok) {
         throw new Error("Something went wrong!");

@@ -22,8 +22,13 @@ const CategoryItem = ({
   const [valid, setValid] = useState(true);
 
   const categoryInputRef = useRef();
-
-  const hasSubCategories = subCategories && subCategories.length > 0;
+  let hasSubCategories
+  if(subCategories == "Empty"){
+    hasSubCategories = false;
+  }
+  else if (subCategories && subCategories.length > 0){
+    hasSubCategories = true;
+  }
   const indentFactor = (level - 1) * 10 + 5;
 
   const toggleMenuHandler = () => {

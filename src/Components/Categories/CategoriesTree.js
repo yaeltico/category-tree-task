@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 // import { List, AutoSizer } from "react-virtualized";
+import { validateCategories, findCategoryById } from "../utils/categoryUtils";
 import { AiOutlinePlus } from "react-icons/ai";
 import { v4 as uuidv4 } from "uuid";
 import CategoryItem from "./CategoryItem/CategoryItem";
@@ -8,59 +9,18 @@ import CollapsibleButton from "../UI/CollapsibleButton";
 import SaveButton from "../UI/SaveButton";
 import classes from "./CategoriesTree.module.css";
 
-const findCategoryById = (id, list) => {
-  const queue = [];
-  list.forEach((element) => {
-    queue.push(element);
-  });
-  while (queue.length) {
-    const curr = queue.pop();
-    if (curr.id === id) {
-      // element found
-      return curr;
-    } else {
-      curr.subCategories &&
-        curr.subCategories.forEach((element) => {
-          queue.push(element);
-        });
-    }
-  }
-
-  return null;
-};
-
-const setNodeName = (id, name, list) => {
-  const node = list.find((c) => c.id === id);
-  node.name = name;
-};
-
-const validateCategories = (list) => {
-  const queue = [];
-  list.forEach((element) => {
-    queue.push(element);
-  });
-  while (queue.length) {
-    const curr = queue.pop();
-    if (curr.name.length == 0) {
-      // invalid element found
-      return false;
-    } else {
-      curr.subCategories &&
-        curr.subCategories.forEach((element) => {
-          queue.push(element);
-        });
-    }
-  }
-
-  return true;
-};
-
 /**
  * Constants
  */
 // const listHeight = 600;
 // const rowHeight = 30;
 // const rowWidth = 600;
+const empty = "Empty";
+
+const setNodeName = (id, name, list) => {
+  const node = list.find((c) => c.id === id);
+  node.name = name;
+};
 
 /**
  *      Component representing a tree of categories
@@ -115,7 +75,7 @@ const CategoriesTree = ({ categories, setCategories, onSaveAll }) => {
       parentId: null,
       name: "",
       level: 1,
-      subCategories: [],
+      subCategories: [empty],
     };
     setCategories((prevCategories) => [...prevCategories, newCategory]);
   };
@@ -129,13 +89,17 @@ const CategoriesTree = ({ categories, setCategories, onSaveAll }) => {
       parentId: parentId,
       name: "",
       level: parentLevel + 1,
-      subCategories: [],
+      subCategories: [empty],
     };
 
     const categoryItems = [...categories];
-    const parent = findCategoryById(parentId, categoryItems);
+    let parent = findCategoryById(parentId, categoryItems);
+    if (parent.subCategories.length == 1 &&
+      parent.subCategories.includes(empty)) {
+      parent.subCategories.pop();
+    }
     parent.subCategories.push(newCategory);
-    setCategories(categoryItems);
+    setCategories([...categories]);
   };
 
   /**
@@ -200,7 +164,11 @@ const CategoriesTree = ({ categories, setCategories, onSaveAll }) => {
         name={item.name}
         level={item.level}
         rootIndex={item.rootIndex}
-        subCategories={!item.subCategories ? [] : item.subCategories}
+        subCategories={
+          (!item.subCategories || item.subCategories.includes(empty))
+            ? []
+            : item.subCategories
+        }
         generateCategoryTree={generateCategoryTree}
         addCategoryHandler={addCategoryHandler}
         deleteHandler={deleteHandler}
