@@ -1,6 +1,7 @@
-This project presents is a single tree category.
+# Single categories tree
+This project presents a single tree of categories with CRUD abilities.
 
-# Some comments:
+## Some comments:
 - Multiple trees support isnwt available in this version due to the time frame, but I took it into consideration while designing the components.
 
 - Towards the end of this task development, I meant to add support for infinite lists (or very large lists) using react-virtualized library but it worked partially (I had issues displaying items and CRUD operations not working as expected).
