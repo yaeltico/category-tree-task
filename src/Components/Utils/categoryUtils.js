@@ -1,3 +1,12 @@
+/**
+ * Constants
+ */
+// export const listHeight = 600;
+// export const rowHeight = 30;
+// export const rowWidth = 600;
+export const empty = "EmptyDummy";
+export const emptyString = "";
+
 export const findCategoryById = (id, list) => {
   const queue = [];
   list.forEach((element) => {
@@ -26,18 +35,23 @@ export const validateCategories = (list) => {
   });
   while (queue.length) {
     const curr = queue.pop();
-    if (curr.name && curr.name.length == 0) {
-      // invalid element found
-      return false;
-    } else {
-      curr.subCategories &&
-        curr.subCategories.forEach((element) => {
-          queue.push(element);
-        });
+    if (curr) {
+      if (curr.name == emptyString) {
+        // invalid element found
+        return false;
+      } else if (curr.subCategories[0] != empty) {
+        curr.subCategories &&
+          curr.subCategories.forEach((element) => {
+            queue.push(element);
+          });
+      }
     }
   }
 
   return true;
 };
 
-  
+export const setNodeName = (id, name, list) => {
+  const node = list.find((c) => c.id === id);
+  node.name = name;
+};

@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 // import { List, AutoSizer } from "react-virtualized";
-import { validateCategories, findCategoryById } from "../utils/categoryUtils";
+import {
+  validateCategories,
+  findCategoryById,
+  setNodeName,
+  empty,
+} from "../utils/categoryUtils";
 import { AiOutlinePlus } from "react-icons/ai";
 import { v4 as uuidv4 } from "uuid";
 import CategoryItem from "./CategoryItem/CategoryItem";
@@ -8,19 +13,6 @@ import Card from "../UI/Card";
 import CollapsibleButton from "../UI/CollapsibleButton";
 import SaveButton from "../UI/SaveButton";
 import classes from "./CategoriesTree.module.css";
-
-/**
- * Constants
- */
-// const listHeight = 600;
-// const rowHeight = 30;
-// const rowWidth = 600;
-const empty = "Empty";
-
-const setNodeName = (id, name, list) => {
-  const node = list.find((c) => c.id === id);
-  node.name = name;
-};
 
 /**
  *      Component representing a tree of categories
@@ -75,7 +67,7 @@ const CategoriesTree = ({ categories, setCategories, onSaveAll }) => {
       parentId: null,
       name: "",
       level: 1,
-      subCategories: [empty],
+      subCategories: [empty], // Firebase WA - save dummy item
     };
     setCategories((prevCategories) => [...prevCategories, newCategory]);
   };
@@ -89,17 +81,19 @@ const CategoriesTree = ({ categories, setCategories, onSaveAll }) => {
       parentId: parentId,
       name: "",
       level: parentLevel + 1,
-      subCategories: [empty],
+      subCategories: [empty], // Firebase WA - save dummy item
     };
 
     const categoryItems = [...categories];
     let parent = findCategoryById(parentId, categoryItems);
-    if (parent.subCategories.length == 1 &&
-      parent.subCategories.includes(empty)) {
+    if (
+      parent.subCategories.length == 1 &&
+      parent.subCategories.includes(empty)
+    ) {
       parent.subCategories.pop();
     }
     parent.subCategories.push(newCategory);
-    setCategories([...categories]);
+    setCategories(categoryItems);
   };
 
   /**
@@ -165,7 +159,7 @@ const CategoriesTree = ({ categories, setCategories, onSaveAll }) => {
         level={item.level}
         rootIndex={item.rootIndex}
         subCategories={
-          (!item.subCategories || item.subCategories.includes(empty))
+          !item.subCategories || item.subCategories.includes(empty)
             ? []
             : item.subCategories
         }
@@ -192,13 +186,11 @@ const CategoriesTree = ({ categories, setCategories, onSaveAll }) => {
           showError={showError}
           setShowError={setShowError}
         />
-
         <ul data-testid="tree">
           {categories &&
             categories.length > 0 &&
             generateCategoryTree(categories)}
         </ul>
-
         <button
           className={classes.newItemButton}
           onClick={() => addRootCatgoryHandler()}
