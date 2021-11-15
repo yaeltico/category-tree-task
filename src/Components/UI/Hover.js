@@ -23,12 +23,10 @@ const Hover = (props) => {
 
   const onMouseEnterHandler = () => {
     setIsHover(true);
-    console.log("enter");
   };
 
   const onMouseLeaveHandler = () => {
     setIsHover(false);
-    console.log("leave");
   };
 
   var inner = normal;

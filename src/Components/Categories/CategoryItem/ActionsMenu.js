@@ -1,16 +1,9 @@
 import React from "react";
-import ToggleButton from "../UI/ToggleButton";
+import ToggleButton from "../../UI/ToggleButton";
 import { RiPlayListAddFill, RiDeleteBin2Line } from "react-icons/ri";
-import Hover from "../UI/Hover";
+import Hover from "../../UI/Hover";
 
 import classes from "./ActionsMenu.module.css";
-
-// const Hover = ({ onHover, children }) => (
-//   <div className={classes.hover}>
-//     <div className={classes.hoverNoHover}>{children}</div>
-//     <div className={classes.hoverHover}>{onHover}</div>
-//   </div>
-// );
 
 const ActionsMenu = ({ onDelete, onAddCategory, level, open, onToggle }) => {
   const actions = [

@@ -1,0 +1,21 @@
+
+.saveContainer {
+    display: flow-root;
+    margin-right: 0.8em;
+  }
+  
+  .save {
+    float: right;
+  }
+  
+  .savedLabel {
+    margin-right: 0.5em;
+    font-size: 1em;
+    color: green;
+  }
+  
+  .errorLabel {
+    margin-right: 0.5em;
+    font-size: 1em;
+    color: red;
+  }

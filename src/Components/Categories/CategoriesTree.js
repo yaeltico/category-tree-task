@@ -4,8 +4,9 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { v4 as uuidv4 } from "uuid";
 import CategoryItem from "./CategoryItem/CategoryItem";
 import Card from "../UI/Card";
-import Button from "../UI/Button";
-import classes from "./Categories.module.css";
+import CollapsibleButton from "../UI/CollapsibleButton";
+import SaveButton from "../UI/SaveButton";
+import classes from "./CategoriesTree.module.css";
 
 const findCategoryById = (id, list) => {
   const queue = [];
@@ -24,11 +25,34 @@ const findCategoryById = (id, list) => {
         });
     }
   }
+
+  return null;
 };
 
 const setNodeName = (id, name, list) => {
   const node = list.find((c) => c.id === id);
   node.name = name;
+};
+
+const validateCategories = (list) => {
+  const queue = [];
+  list.forEach((element) => {
+    queue.push(element);
+  });
+  while (queue.length) {
+    const curr = queue.pop();
+    if (curr.name.length == 0) {
+      // invalid element found
+      return false;
+    } else {
+      curr.subCategories &&
+        curr.subCategories.forEach((element) => {
+          queue.push(element);
+        });
+    }
+  }
+
+  return true;
 };
 
 /**
@@ -42,22 +66,31 @@ const setNodeName = (id, name, list) => {
  *      Component representing a tree of categories
  * */
 const CategoriesTree = ({ categories, setCategories, onSaveAll }) => {
-  const [showSaved, setShowSaved] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   useEffect(() => {
-    // console.log("tree",tree);
     setCategories(categories);
   }, []);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowSaved(false);
-    }, 3000);
-    console.log("timeout");
+  /**
+   *  save category tree to firebase
+   */
+  const saveAllHanlder = () => {
+    // check each category before saving all
+    const isValidSave = validateCategories(categories);
 
-    return () => clearTimeout(timer);
-  }, [showSaved]);
+    if (isValidSave) {
+      onSaveAll(categories);
+      setShowSuccess(true);
+    } else {
+      setShowError(true);
+    }
+  };
 
+  /**
+   * delete category action handler
+   */
   const deleteHandler = (id, parentId) => {
     // in case category in root
     if (parentId === null) {
@@ -73,6 +106,9 @@ const CategoriesTree = ({ categories, setCategories, onSaveAll }) => {
     }
   };
 
+  /**
+   * add new category handler to top level of the tree
+   */
   const addRootCatgoryHandler = () => {
     const newCategory = {
       id: uuidv4(),
@@ -84,6 +120,9 @@ const CategoriesTree = ({ categories, setCategories, onSaveAll }) => {
     setCategories((prevCategories) => [...prevCategories, newCategory]);
   };
 
+  /**
+   * add new category handler in sub trees
+   */
   const addCategoryHandler = (parentId, parentLevel) => {
     const newCategory = {
       id: uuidv4(),
@@ -92,14 +131,20 @@ const CategoriesTree = ({ categories, setCategories, onSaveAll }) => {
       level: parentLevel + 1,
       subCategories: [],
     };
+
     const categoryItems = [...categories];
     const parent = findCategoryById(parentId, categoryItems);
     parent.subCategories.push(newCategory);
     setCategories(categoryItems);
   };
-  // console.log("after render", categories);
 
-  const saveCategory = (name, id, parentId) => {
+  /**
+   * update category name in the state
+   * @param {*} name
+   * @param {*} id
+   * @param {*} parentId
+   */
+  const updateCategory = (name, id, parentId) => {
     const categoryItems = [...categories];
     // in case category in root
     if (parentId === null) {
@@ -156,34 +201,36 @@ const CategoriesTree = ({ categories, setCategories, onSaveAll }) => {
         level={item.level}
         rootIndex={item.rootIndex}
         subCategories={!item.subCategories ? [] : item.subCategories}
-        createTreeNodes={generateCategoryTree}
+        generateCategoryTree={generateCategoryTree}
         addCategoryHandler={addCategoryHandler}
         deleteHandler={deleteHandler}
-        saveCategory={saveCategory}
+        updateCategory={updateCategory}
       ></CategoryItem>
     ));
-  };
-
-  const saveHanlder = () => {
-    setShowSaved(true);
-    onSaveAll(categories);
   };
 
   return (
     <section className={classes.categoris}>
       <Card>
-        <h3 className={classes.title}>Animals</h3>
-        <div className={classes.saveContainer}>
-          <div className={classes.save}>
-            {showSaved && <span className={classes.savedLabel}>✓ Saved</span> }
-            <Button onClick={saveHanlder}>Save</Button>
-          </div>
+        <div className={classes.container}>
+          <CollapsibleButton />
+          <h3 className={classes.title}>My Category Tree</h3>
         </div>
-        <ul>
+
+        <SaveButton
+          onSave={saveAllHanlder}
+          showSuccess={showSuccess}
+          setShowSuccess={setShowSuccess}
+          showError={showError}
+          setShowError={setShowError}
+        />
+
+        <ul data-testid="tree">
           {categories &&
             categories.length > 0 &&
             generateCategoryTree(categories)}
         </ul>
+
         <button
           className={classes.newItemButton}
           onClick={() => addRootCatgoryHandler()}

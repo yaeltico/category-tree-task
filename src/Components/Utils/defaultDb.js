@@ -17,6 +17,7 @@ const parent1 = uuidv4();
 const parent2 = uuidv4();
 const parent3 = uuidv4();
 const parent4 = uuidv4();
+
 export const demoCategories = [
   {
     id: parent1,

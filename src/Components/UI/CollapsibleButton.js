@@ -1,5 +1,5 @@
 import React from "react"
-import ToggleButton from "../UI/ToggleButton";
+import ToggleButton from "./ToggleButton";
 
 import classes from "./CollapsibleButton.module.css";
 

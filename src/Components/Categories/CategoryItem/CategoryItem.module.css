@@ -1,5 +1,5 @@
 .row {
-  display: block !important; /* warning WA */
+  display: block !important; 
 }
 .container {
   display: flex;
@@ -17,7 +17,7 @@
   box-sizing: border-box;
   color: rgb(43, 43, 43);
   font-size: 1.05rem;
-  width: 100%; /*remove after*/
+  width: 95%; 
   padding: 0.4em;
 }
 
@@ -27,15 +27,17 @@
   box-shadow: 0 0 5px #719ece;
 }
 
-.invalidName {
-  box-shadow: 0 0 5px red;
-}
-
 .categoryDisabled {
   border: none;
   background-color: whitesmoke;
   color: rgb(43, 43, 43);
   font-size: 1.05rem;
-  width: 95%; /*remove after*/
+  width: 90%; /*remove after*/
   padding: 0.4em;
+}
+
+.invalid {
+  color: red;
+  font-size: 1.5em;
+  font-style: italic;
 }

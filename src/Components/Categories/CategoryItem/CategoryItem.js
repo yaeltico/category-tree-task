@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react";
-import CollapsibleButton from "../CollapsibleButton";
-import ActionsMenu from "../ActionsMenu";
+import React, { useState, useRef, useEffect } from "react";
+import CollapsibleButton from "../../UI/CollapsibleButton";
+import ActionsMenu from "./ActionsMenu";
 
 import classes from "./CategoryItem.module.css";
 
@@ -10,34 +10,24 @@ const CategoryItem = ({
   parentId,
   level,
   subCategories,
-  createTreeNodes,
+  generateCategoryTree,
   addCategoryHandler,
   deleteHandler,
-  setValidateSave,
-  saveCategory,
+  updateCategory,
 }) => {
-  const hasSubCategories = subCategories && subCategories.length > 0;
-  const indentFactor = (level - 1) * 10 + 5;
   const [expendSubTree, setExpendSubTree] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
-
   const [category, setCategory] = useState(name);
   const [disabled, setDisabled] = useState(true);
   const [valid, setValid] = useState(true);
+
   const categoryInputRef = useRef();
 
-  const validateNameNotEmpty = (name) => {
-    const isValid = name.length !== 0;
-    setValid(isValid);
-
-    // if(!isValid) {
-    //   setValidateSave(false);
-    // }
-  };
+  const hasSubCategories = subCategories && subCategories.length > 0;
+  const indentFactor = (level - 1) * 10 + 5;
 
   const toggleMenuHandler = () => {
     setOpenMenu((prevState) => !prevState);
-    console.log("toggle menu");
   };
 
   const toggleCategoryHandler = () => {
@@ -49,12 +39,9 @@ const CategoryItem = ({
   };
 
   const finishCurrentEditHandler = () => {
-    // console.log("finish edit", category, parentId);
     setDisabled(true);
-    if (category) {
-      validateNameNotEmpty(category);
-      saveCategory(category, id, parentId);
-    }
+    updateCategory(category, id, parentId);
+    setValid(category.length > 0);
   };
 
   const enterKeyHandler = (event) => {
@@ -71,15 +58,15 @@ const CategoryItem = ({
   const newCategoryHandler = () => {
     setExpendSubTree(true);
     setOpenMenu(false);
-    console.log("close menu");
     addCategoryHandler(id, level);
   };
 
   const inputClass = disabled ? classes.categoryDisabled : classes.categoryEdit;
-  const subCategoriesList = createTreeNodes(subCategories);
+  const subCategoriesList = generateCategoryTree(subCategories);
 
   return (
     <li
+      role="listitem"
       key={id}
       style={{ paddingLeft: `${indentFactor}px` }}
       className={classes.row}
@@ -93,7 +80,7 @@ const CategoryItem = ({
         <div className={classes.category}>
           <input
             autoFocus
-            className={`${inputClass} ${!valid && classes.invalidName}`}
+            className={inputClass}
             ref={categoryInputRef}
             type="text"
             value={category}
@@ -104,6 +91,9 @@ const CategoryItem = ({
             onKeyPress={enterKeyHandler}
           />
         </div>
+
+        {!valid && <span className={classes.invalid}>✗</span>}
+
         <ActionsMenu
           open={openMenu}
           onToggle={toggleMenuHandler}

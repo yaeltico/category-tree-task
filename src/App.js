@@ -1,6 +1,6 @@
 import React, { useEffect, Fragment, useState, useCallback } from "react";
-import CategoriesTree from "./Components/Categories/CategoriesTree";
-import { bigList, demoCategories } from "./Components/Utils/defaultDb";
+import CategoriesTree from "./components/Categories/CategoriesTree";
+import { bigList, demoCategories } from "./components/utils/defaultDb";
 import classes from "./App.module.css";
 
 
@@ -17,11 +17,10 @@ const saveAllCategoriesHandler = async (categories) => {
     }
   );
   const data = await response.json();
-  // console.log(data);
 };
 
 function App() {
-  const [categories, setCategories] = useState(demoCategories);
+  const [categories, setCategories] = useState([]);
   const [isLodaing, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -31,23 +30,16 @@ function App() {
     // retrieve categories from firbase
     try {
       const response = await fetch(
-        "https://category-db-5f496-default-rtdb.europe-west1.firebasedatabase.app/categories.json"
+        "https://category-db-5f496-default-rtdb.europe-west1.firebasedatabase.app/categories.json?orderBy=\"$key\"&limitToLast=1"
       );
       if (!response.ok) {
         throw new Error("Something went wrong!");
       }
       const data = await response.json();
-
-      // Object.values(data).forEach((tree) => {
-      //   console.log("tree app", tree);
-      //   setTree(tree);
-      // });
-      const values = data && Object.values(data);
-      // console.log("values", values);
+      const results = data && Object.values(data);
       let loadedTree = [];
-      if (values && values.length > 0) {
-        // get last tree version
-        loadedTree = values[values.length - 1].map((category) => ({
+      if (results) {
+        loadedTree = results[0].map((category) => ({
           id: category.id,
           parentId: category.parentId ? category.parentId : null,
           name: category.name,
@@ -55,14 +47,13 @@ function App() {
           subCategories: category.subCategories ? category.subCategories : [],
         }));
       }
-      // setCategories(loadedTree);
+      setCategories(loadedTree);
     } catch (error) {
       setError(error.message);
     }
     setIsLoading(false);
   }, []);
 
-  // console.log(categories);
   useEffect(() => {
     // fetch data once
     fetchCategoryTreeHandler();
@@ -82,6 +73,7 @@ function App() {
   if (isLodaing) {
     mainContent = <div className={classes.centered}>Loading...</div>;
   }
+
   return (
     <Fragment>
       <header className={classes.header}>
